@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FacebookSDK/FacebookSDK.h>
+
+@class SLViewController;
 
 @interface KidsIQ6AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) SLViewController *viewController;
+-(BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI;
 
 @end
