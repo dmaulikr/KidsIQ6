@@ -19,6 +19,7 @@
 
 @implementation ResultController
 @synthesize name, titleText, score, country, paidFlag, maxQuestions, nsURL, responseData, fCount, mCount, sCount, fTCount, mTCount, sTCount;
+@synthesize player = _player;
 bool reset = NO;
 NSString *paid = @"N";
 
@@ -44,6 +45,7 @@ NSString *paid = @"N";
 
 - (void)viewDidLoad
 {
+    [_player stop];
     nameLabel.text =  [@"Hi there, " stringByAppendingString:[name stringByAppendingString:@""]];
     titleLabel.text = titleText;
     scoreLabel.text = [@"Your score is: " stringByAppendingString:score];

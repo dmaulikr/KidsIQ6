@@ -230,10 +230,10 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.20000000298023224" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="dpG-lp-EdD">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.30000000298023222" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="dpG-lp-EdD">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="458"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -315,27 +315,18 @@
                                     <segue destination="22H-QB-EfK" kind="modal" modalTransitionStyle="crossDissolve" id="dnq-UX-g9i"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="TWq-aR-p1l">
-                                <rect key="frame" x="28" y="296" width="44" height="44"/>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="gray" id="6F3-nC-0Uh">
+                                <rect key="frame" x="150" y="262" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="FB">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="FBScreen" destination="2" eventType="touchUpInside" id="MKH-3Y-vf6"/>
-                                </connections>
-                            </button>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="backButton" destination="OEZ-R3-0yy" id="cuz-Je-NDu"/>
                         <outlet property="nameOK" destination="3WD-0v-sTK" id="kOH-8w-mZT"/>
                         <outlet property="segmentedControl" destination="aqr-Rh-aHY" id="7Y6-Br-4mf"/>
+                        <outlet property="spinner" destination="6F3-nC-0Uh" id="zyy-tC-g1Z"/>
                         <outlet property="statusLabel" destination="7DA-NS-QQh" id="3so-MB-I8j"/>
                     </connections>
                 </viewController>
@@ -447,34 +438,13 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="k9h-8j-S3A">
-                                <rect key="frame" x="112" y="140" width="200" height="46"/>
+                            <button opaque="NO" alpha="0.40000000000000013" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="61e-eM-IhW">
+                                <rect key="frame" x="16" y="140" width="289" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="z8Q-1i-mH5">
-                                <rect key="frame" x="112" y="200" width="200" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="tsv-46-XvX">
-                                <rect key="frame" x="112" y="262" width="200" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="61e-eM-IhW">
-                                <rect key="frame" x="11" y="140" width="93" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="boldSystem" size="button"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                                 <state key="normal">
-                                    <color key="titleColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
@@ -484,13 +454,13 @@
                                     <action selector="choicea:" destination="ZlH-qz-Ilx" eventType="touchUpInside" id="2ah-yQ-50B"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="KIT-SE-mLB">
-                                <rect key="frame" x="11" y="200" width="93" height="46"/>
+                            <button opaque="NO" alpha="0.40000000000000013" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="KIT-SE-mLB">
+                                <rect key="frame" x="16" y="200" width="289" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="boldSystem" size="button"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                                 <state key="normal">
-                                    <color key="titleColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
@@ -500,13 +470,13 @@
                                     <action selector="choiceb:" destination="ZlH-qz-Ilx" eventType="touchUpInside" id="ImC-mi-6Ph"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="LFq-qP-JaS">
-                                <rect key="frame" x="11" y="262" width="93" height="46"/>
+                            <button opaque="NO" alpha="0.40000000000000013" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="LFq-qP-JaS">
+                                <rect key="frame" x="16" y="262" width="289" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="boldSystem" size="button"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                                 <state key="normal">
-                                    <color key="titleColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
@@ -516,20 +486,13 @@
                                     <action selector="choicec:" destination="ZlH-qz-Ilx" eventType="touchUpInside" id="WJz-n4-rhA"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="jw7-Ol-HMV">
-                                <rect key="frame" x="112" y="324" width="200" height="43"/>
+                            <button opaque="NO" alpha="0.40000000000000013" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="JYs-5s-Fmk">
+                                <rect key="frame" x="16" y="324" width="289" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="JYs-5s-Fmk">
-                                <rect key="frame" x="11" y="324" width="93" height="43"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="boldSystem" size="button"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                                 <state key="normal">
-                                    <color key="titleColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
@@ -589,10 +552,6 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <outlet property="answerA" destination="k9h-8j-S3A" id="WDA-Vu-8u4"/>
-                        <outlet property="answerB" destination="z8Q-1i-mH5" id="n0v-8b-Z9O"/>
-                        <outlet property="answerC" destination="tsv-46-XvX" id="YR1-jX-Uii"/>
-                        <outlet property="answerD" destination="jw7-Ol-HMV" id="gfo-7U-kgn"/>
                         <outlet property="choicea" destination="61e-eM-IhW" id="l8S-ef-qGr"/>
                         <outlet property="choiceb" destination="KIT-SE-mLB" id="qUZ-0D-V5f"/>
                         <outlet property="choicec" destination="LFq-qP-JaS" id="QOs-zB-sBK"/>
@@ -770,6 +729,82 @@
             <point key="canvasLocation" x="860" y="74"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="KidsIQ6ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/KidsIQ6ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="checkAnswer"/>
+                <relationship kind="action" name="dismissView"/>
+                <relationship kind="action" name="showLoginViewController"/>
+                <relationship kind="action" name="showQuitController"/>
+                <relationship kind="action" name="skipQuestion"/>
+                <relationship kind="action" name="startCountdown:"/>
+                <relationship kind="action" name="submit:"/>
+                <relationship kind="outlet" name="answerA" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="answerB" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="answerC" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="answerD" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="choicea" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="choiceb" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="choicec" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="choiced" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="myCounterLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="nameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="question" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="result" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="score" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="submit" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="test" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="LeaderBoardController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LeaderBoardController.h"/>
+            <relationships>
+                <relationship kind="action" name="dismissView"/>
+                <relationship kind="action" name="loginScreen"/>
+                <relationship kind="action" name="showMoreLeaders"/>
+                <relationship kind="action" name="showPreviousLeaders"/>
+                <relationship kind="outlet" name="bottomLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="leaderList" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="moreLeaders" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="prevLeaders" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="LeaderBoardDetailController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LeaderBoardDetailController.h"/>
+            <relationships>
+                <relationship kind="action" name="dismissView"/>
+                <relationship kind="outlet" name="fCountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="fCountView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="mCountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="mCountView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="nameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="sCountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="sCountView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="scoreLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="NameViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NameViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="deleteKeyChain:"/>
+                <relationship kind="action" name="dismissView"/>
+                <relationship kind="action" name="textFieldReturn:"/>
+                <relationship kind="action" name="valueChanged"/>
+                <relationship kind="outlet" name="backButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="choicesLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="errorStatus" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="levelPickerView" candidateClass="UIPickerView"/>
+                <relationship kind="outlet" name="nameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="nameOK" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="segmentedControl" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="spinner" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="statusLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

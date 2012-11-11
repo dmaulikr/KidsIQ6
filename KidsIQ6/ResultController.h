@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <FacebookSDK/FacebookSDK.h>
+#import "AudioToolbox/AudioToolbox.h"
+#import "AVFoundation/AVFoundation.h"
 
 @interface ResultController : UIViewController <NSURLConnectionDelegate>
 {
@@ -15,12 +17,7 @@
     IBOutlet UILabel *nameLabel;
     IBOutlet UILabel *titleLabel;
     IBOutlet UILabel *scoreLabel;
-    IBOutlet UIButton *startoverBtn;
-    IBOutlet UIButton *publishButton;
     NSMutableData *responseData;
-	UIButton *_logoutButton;
-	NSString *_facebookName;
-	BOOL _posting;
 }
 
 @property (nonatomic, strong) NSString *name, *titleText, *score, *country;
@@ -28,6 +25,7 @@
 
 @property int maxQuestions, fCount, fTCount, mCount, mTCount, sCount, sTCount;
 @property (nonatomic, retain) NSMutableData *responseData;
+@property (strong, nonatomic) AVAudioPlayer *player;
 
 -(IBAction)dismissView;
 -(IBAction)loginScreen;

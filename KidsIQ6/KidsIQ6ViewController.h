@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AudioToolbox/AudioToolbox.h"
+#import "AVFoundation/AVFoundation.h"
 
 @interface KidsIQ6ViewController : UIViewController
 {
@@ -37,6 +39,7 @@
 @property int maxQuestions;
 @property (assign) int level;
 @property (nonatomic, retain) NSTimer *mainTimer;
+@property (strong, nonatomic) AVAudioPlayer *player;
 
 -(IBAction)showQuitController;
 

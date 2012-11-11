@@ -2,7 +2,7 @@
 //  NameViewController.m
 //  KidsIQ6
 //
-//  Created by Chan Komagan on 7/28/12.
+//  Created by Chan Komagan on 11/8/12.
 //  Copyright (c) 2012 KidsIQ. All rights reserved.
 //
 
@@ -10,17 +10,21 @@
 #import "KidsIQ6ViewController.h"
 #import "SFHFKeychainUtils.h"
 #import "SLViewController.h"
+#import "AudioToolbox/AudioToolbox.h"
+#import "AVFoundation/AVFoundation.h"
 
 @interface NameViewController()
 @property (nonatomic, strong) NSString *nsURL;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+@property (strong, nonatomic) AVAudioPlayer *player;
 @end
 
 @implementation NameViewController
 
 @synthesize levelpicker, levelPickerView, maxQuestions, statusLabel, nsURL, responseData;
-NSDictionary *res;
-
+@synthesize spinner = _spinner;
 NSString *newString;
+NSDictionary *res;
 bool paidFlag = FALSE;
 BOOL nameExists;
 NSString *levelSelection;
@@ -29,7 +33,13 @@ int noOfQuestions = 0;
 float tableHeight = 50;
 NSString *country;
 bool countrySelected = FALSE;
+SKProductsRequest *request;
+NSSet *productId;
+@synthesize player = _player;
 
+#define kInAppPurchaseManagerProductsFetchedNotification @"kInAppPurchaseManagerProductsFetchedNotification"
+#define kInAppPurchaseManagerTransactionFailedNotification @"kInAppPurchaseManagerTransactionFailedNotification"
+#define kInAppPurchaseManagerTransactionSucceededNotification @"kInAppPurchaseManagerTransactionSucceededNotification"
 #define LEGAL	@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 #define kStoredData @"KidsIQ"
 
@@ -53,13 +63,11 @@ bool countrySelected = FALSE;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+    productId = [NSSet setWithObjects:@"com.chan.KidsIQ", @"KidsIQIPhone", nil];
+    self.spinner.hidden = TRUE;
+    self.spinner.transform = CGAffineTransformMakeScale(1, 1);
     [self populateCountry];
-    if ([self IAPItemPurchased]) {
-        
-    } else {
-        
-    }
+    
     levelpicker = [NSArray arrayWithObjects:@"60",@"40",@"20",nil];
 
     challengeLevel = 1; noOfQuestions = 0;
@@ -84,13 +92,14 @@ bool countrySelected = FALSE;
     [self.view addSubview:levelPickerView];
     self.levelPickerView.center = CGPointMake(160,260);
     [self loadUserSession];
+    [super viewDidLoad];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    //NSError *error = nil;
-    //[SFHFKeychainUtils deleteItemForUsername:@"KidsIQ" andServiceName:kStoredData error:&error];
+    NSError *error = nil;
+    [SFHFKeychainUtils deleteItemForUsername:@"KidsIQIPhone" andServiceName:kStoredData error:&error];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -143,9 +152,29 @@ bool countrySelected = FALSE;
         quizView.name = nameText.text;
         quizView.country = country;
         quizView.maxQuestions = noOfQuestions;
+        quizView.usedNumbers = [NSMutableSet setWithCapacity:noOfQuestions-1];
         quizView.paidFlag = paidFlag;
         quizView.level = challengeLevel; //1 is basic
         [quizView resetAll];
+        NSError *error= [NSError errorWithDomain:@"Domain" code:0 userInfo:nil];
+        NSString *soundFilePath = [[NSBundle mainBundle] pathForResource:@"Tabuk" ofType:@"mp3"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath : soundFilePath])
+        {
+            NSURL *soundFileURL = [NSURL fileURLWithPath:soundFilePath];
+            _player = [[AVAudioPlayer alloc] initWithContentsOfURL:soundFileURL error:nil];
+            _player.delegate = self;
+            _player.volume = 0.3;
+            [_player prepareToPlay];
+            if (_player == nil)
+                NSLog(@"%@", [error description]);
+            else
+                [_player play];
+        }
+        else
+        {
+            NSLog(@"error, file not found: %@", soundFilePath);
+        }
+        quizView.player = _player;
     }
     //NSLog(@"%i", noOfQuestions);
 }
@@ -453,8 +482,6 @@ countryTableView.rowHeight = tableHeight;
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    //NSLog(@"didFailWithError");
-    //NSLog(@"Connection failed: %@", [error description]);
     self.responseData = nil;
 }
 
@@ -476,12 +503,12 @@ countryTableView.rowHeight = tableHeight;
     
 }
 
+/**************************In-App Purchase Logic*****************/
+
 -(BOOL)IAPItemPurchased {
     
-    // check userdefaults key
     NSError *error = nil;
-   [SFHFKeychainUtils deleteItemForUsername:@"KidsIQ" andServiceName:kStoredData error:&error];
-    NSString *password = [SFHFKeychainUtils getPasswordForUsername: @"KidsIQ" andServiceName: kStoredData error:&error];
+    NSString *password = [SFHFKeychainUtils getPasswordForUsername: @"KidsIQIPhone" andServiceName: kStoredData error:&error];
     NSLog(@"%@", password);
     if ([password isEqualToString:@"whatever"])
     {
@@ -491,14 +518,16 @@ countryTableView.rowHeight = tableHeight;
     {
         return NO;
     }
-    
 }
 
 -(void)triggerPurchase {
-    if (paidFlag) {
-        //statusLabel.text = @"Already Purchased...";
-    } else {
-        // not purchased so show a view to prompt for purchase
+    self.spinner.hidden = FALSE;
+    [self.spinner startAnimating];
+    if ([self IAPItemPurchased]) {
+        //statusLabel.text = @"Welcome back. You already purchased this app";
+        [self yesPurchase];
+    }
+    else{
         askToPurchase = [[UIAlertView alloc]
                          initWithTitle:@"Full Feature Locked"
                          message:@"Purchase full feature \n for US $0.99?"
@@ -506,26 +535,30 @@ countryTableView.rowHeight = tableHeight;
                          cancelButtonTitle:nil
                          otherButtonTitles:@"Yes", @"No", nil];
         askToPurchase.delegate = self;
+        segmentedControl.enabled = FALSE;
+        levelPickerView.hidden = TRUE;
+        nameOK.hidden = TRUE;
+        backButton.hidden = TRUE;
+        [self.spinner startAnimating];
+        self.spinner.hidden = FALSE;
         [askToPurchase show];
     }
-
 }
 
 #pragma mark StoreKit Delegate
 
 -(void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions {
+    //[self checkPurchasedItems];
     for (SKPaymentTransaction *transaction in transactions) {
         switch (transaction.transactionState) {
             case SKPaymentTransactionStatePurchasing:
             {
-                // show wait view here
                 statusLabel.text = @"Processing...";
                 break;
             }
             case SKPaymentTransactionStatePurchased:
             {
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-                // remove wait view and unlock feature 2
                 statusLabel.text = @"Congrats. You unlocked full version!";
                 UIAlertView *tmp = [[UIAlertView alloc]
                                     initWithTitle:@"Complete"
@@ -534,41 +567,93 @@ countryTableView.rowHeight = tableHeight;
                                     cancelButtonTitle:nil
                                     otherButtonTitles:@"Ok", nil];
                 paidFlag = TRUE;
-                                    
-                [tmp show];                
-                
-                NSError *error = nil;
-                [SFHFKeychainUtils storeUsername:@"KidsIQ" andPassword:@"whatever" forServiceName:kStoredData updateExisting:TRUE error:&error];
-               // NSString *password = [SFHFKeychainUtils getPasswordForUsername:@"KidsIQ" andServiceName:kStoredData error:&error];
-                //NSLog(@"%@ before", password);
-                // apply purchase action  - hide lock overlay and
-                
-                // do other thing to enable the features
-                
+                [self yesPurchase];
+                [tmp show];
+                [self completeTransaction:transaction];
                 break;
             }
             case SKPaymentTransactionStateRestored:
             {
-                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-                // remove wait view here
-                statusLabel.text = @"";
+                [self restoreTransaction:transaction];
                 break;
             }
             case SKPaymentTransactionStateFailed:
             {
+                NSLog(@"%d", transaction.error.code);
                 if (transaction.error.code != SKErrorPaymentCancelled) {
                     NSLog(@"Error payment cancelled");
+                    statusLabel.text = @"Sorry. Feature Locked!";
+                    paidFlag = FALSE;
+                    [self noPurchase];
+                }
+                if (transaction.error.code != SKErrorPaymentNotAllowed) {
+                    NSLog(@"Error payment not allowed");
+                    statusLabel.text = @"Welcome back. You already purchased this app!";
+                    [self yesPurchase];
                 }
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 // remove wait view here
-                statusLabel.text = @"Sorry. Feature Locked!";
-                [levelPickerView selectRow:2 inComponent:0 animated:YES];
-                segmentedControl.selectedSegmentIndex = 0;
                 break;
             }
             default:
                 break;
         }
+    }
+}
+
+- (void)completeTransaction:(SKPaymentTransaction *)transaction
+{
+    [self recordTransaction:transaction];
+    [self provideContent:transaction.payment.productIdentifier];
+    [self finishTransaction:transaction wasSuccessful:YES];
+}
+
+- (void)finishTransaction:(SKPaymentTransaction *)transaction wasSuccessful:(BOOL)wasSuccessful
+{
+    // remove the transaction from the payment queue.
+    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:transaction, @"transaction" , nil];
+    if (wasSuccessful)
+    {
+        // send out a notification that we’ve finished the transaction
+        [[NSNotificationCenter defaultCenter] postNotificationName:kInAppPurchaseManagerTransactionSucceededNotification object:self userInfo:userInfo];
+    }
+    else
+    {
+        // send out a notification for the failed transaction
+        [[NSNotificationCenter defaultCenter] postNotificationName:kInAppPurchaseManagerTransactionFailedNotification object:self userInfo:userInfo];
+    }
+}
+
+- (void)recordTransaction:(SKPaymentTransaction *)transaction
+{
+    if ([transaction.payment.productIdentifier isEqualToString:@"KidsIQIPhone"])
+    {
+        // save the transaction receipt to disk
+        [[NSUserDefaults standardUserDefaults] setValue:transaction.transactionReceipt forKey:@"KidsIQIPhone" ];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
+- (void)restoreTransaction: (SKPaymentTransaction *)transaction
+{
+    [self recordTransaction: transaction];
+    [self provideContent: transaction.originalTransaction.payment.productIdentifier];
+    [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+    // remove wait view here
+    statusLabel.text = @"";
+    paidFlag = TRUE;
+    [self noPurchase];
+}
+
+- (void)provideContent:(NSString *)productId
+{
+    if ([productId isEqualToString:@"KidsIQIPhone"])
+    {
+        // enable the pro features
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"KidsIQIPhone" ];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
@@ -584,10 +669,10 @@ countryTableView.rowHeight = tableHeight;
     if (count > 0) {
         validProduct = [response.products objectAtIndex:0];
         
-        SKPayment *payment = [SKPayment paymentWithProductIdentifier:@"KidsIQ"];
+        SKPayment *payment = [SKPayment paymentWithProductIdentifier:@"KidsIQIPhone"];
+        
         [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
         [[SKPaymentQueue defaultQueue] addPayment:payment];
-        
         
     } else {
         UIAlertView *tmp = [[UIAlertView alloc]
@@ -595,11 +680,41 @@ countryTableView.rowHeight = tableHeight;
                             message:@"No products to purchase"
                             delegate:self
                             cancelButtonTitle:nil
-                            otherButtonTitles:@"Ok", nil];
+                            otherButtonTitles:@"Ok", nil];  
+        paidFlag = FALSE;
+        [self noPurchase];
         [tmp show];
     }
     
     
+}
+
+-(void)noPurchase
+{
+    [levelPickerView selectRow:2 inComponent:0 animated:YES];
+    segmentedControl.selectedSegmentIndex = 0;
+    [self.spinner stopAnimating];
+    self.spinner.hidden = TRUE;
+    backButton.enabled = TRUE;
+    segmentedControl.enabled = TRUE;
+    levelPickerView.hidden = FALSE;
+    nameOK.hidden = FALSE;
+    backButton.hidden = FALSE;
+}
+
+-(void)yesPurchase
+{
+    paidFlag = TRUE;
+    [self.spinner stopAnimating];
+    self.spinner.hidden = TRUE;
+    backButton.hidden = FALSE;
+    backButton.enabled = TRUE;
+    nameOK.hidden = FALSE;
+    segmentedControl.enabled = TRUE;
+    levelPickerView.hidden = FALSE;
+    NSError *error = nil;
+    [SFHFKeychainUtils storeUsername:@"KidsIQIPhone" andPassword:@"whatever" forServiceName:kStoredData updateExisting:TRUE error:&error];
+    NSString *password = [SFHFKeychainUtils getPasswordForUsername:@"KidsIQIPhone" andServiceName:kStoredData error:&error];
 }
 
 -(void)requestDidFinish:(SKRequest *)request
@@ -621,13 +736,9 @@ countryTableView.rowHeight = tableHeight;
         if (buttonIndex==0) {
             // user tapped YES, but we need to check if IAP is enabled or not.
             if ([SKPaymentQueue canMakePayments]) {
-                
-                SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithObject:@"KidsIQ"]];
-                
+                request = [[SKProductsRequest alloc] initWithProductIdentifiers:productId];
                 request.delegate = self;
                 [request start];
-                
-                
             } else {
                 UIAlertView *tmp = [[UIAlertView alloc]
                                     initWithTitle:@"Prohibited"
@@ -642,8 +753,7 @@ countryTableView.rowHeight = tableHeight;
         } 
     else {
             NSLog(@"Not selected");
-            [levelPickerView selectRow:2 inComponent:0 animated:YES];
-            segmentedControl.selectedSegmentIndex = 0;
+            [self noPurchase];
         }
     }
 }
@@ -651,7 +761,7 @@ countryTableView.rowHeight = tableHeight;
 -(IBAction)deleteKeyChain:(id)sender {
     
     NSError *error = nil;
-    [SFHFKeychainUtils deleteItemForUsername:@"KidsIQ" andServiceName:kStoredData error:&error];
+    [SFHFKeychainUtils deleteItemForUsername:@"KidsIQIPhone" andServiceName:kStoredData error:&error];
 }
 
 /** FB Login stuff **/

@@ -16,7 +16,7 @@
     IBOutlet UILabel *choicesLabel;
     IBOutlet UILabel *errorStatus;
     UITextField *nameText;
-    IBOutlet UIButton *nameOK;
+    IBOutlet UIButton *nameOK, *backButton;
     IBOutlet UIPickerView *levelPickerView;
     IBOutlet UISegmentedControl *segmentedControl;
     NSMutableArray *autoCompleteArray;
